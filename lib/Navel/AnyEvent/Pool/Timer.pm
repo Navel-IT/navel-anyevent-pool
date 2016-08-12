@@ -49,16 +49,14 @@ sub new {
 
         $self->detach_pool() if blessed($temp{pool}) && $temp{pool}->isa('Navel::AnyEvent::Pool');
 
-        for (keys %temp) {
-            $self->{$_} = $temp{$_} if defined $temp{$_};
-        }
+        $self->{$_} //= $temp{$_} for keys %temp;
     } else {
         croak('callback must a CODE reference') unless ref $callback eq 'CODE';
 
         $self = bless {
-            name => defined $name ? $name : croak('a name must be provided to add a timer'),
+            name => $name // croak('a name must be provided to add a timer'),
             pool => $temp{pool},
-            enabled => defined $temp{enabled} ? $temp{enabled} : 1,
+            enabled => $temp{enabled} // 1,
             singleton => $temp{singleton},
             running => 0,
             on_disabled => $temp{on_disabled},
