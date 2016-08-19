@@ -37,6 +37,8 @@ sub new {
         pool => delete $options{pool},
         enabled => delete $options{enabled},
         singleton => delete $options{singleton} || 0,
+        on_enable => delete $options{on_enable},
+        on_disable => delete $options{on_disable},
         on_disabled => delete $options{on_disabled},
         on_maximum_simultaneous_jobs => delete $options{on_maximum_simultaneous_jobs},
         on_singleton_already_running => delete $options{on_singleton_already_running}
@@ -59,6 +61,8 @@ sub new {
             enabled => $temp{enabled} // 1,
             singleton => $temp{singleton},
             running => 0,
+            on_enable => $temp{on_enable},
+            on_disable => $temp{on_disable},
             on_disabled => $temp{on_disabled},
             on_maximum_simultaneous_jobs => $temp{on_maximum_simultaneous_jobs},
             on_singleton_already_running => $temp{on_singleton_already_running},
@@ -147,6 +151,26 @@ sub end {
 
 sub exec {
     shift->{callback}->();
+}
+
+sub enable {
+    my $self = shift;
+
+    $self->{enabled} = 1;
+
+    $self->{on_enable}->($self) if ref $self->{on_enable} eq 'CODE';
+
+    $self;
+}
+
+sub disable {
+    my $self = shift;
+
+    $self->{enabled} = 0;
+
+    $self->{on_disable}->($self) if ref $self->{on_enable} eq 'CODE';
+
+    $self;
 }
 
 # sub AUTOLOAD {}
