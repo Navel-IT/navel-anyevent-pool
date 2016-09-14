@@ -33,15 +33,15 @@ sub new {
 
     if (defined $self->{logger}) {
         $self->{on_callbacks}->{on_disabled} = sub {
-            $self->{logger}->info('job ' . shift->full_name() . ' is disabled.');
+            $self->{logger}->info(shift->full_name() . ': disabled.');
         };
 
         $self->{on_callbacks}->{on_maximum_simultaneous_jobs} = sub {
-            $self->{logger}->warning('Cannot start job ' . shift->full_name() . ': there are too many jobs running (maximum of ' . $self->{maximum_simultaneous_jobs} . ').');
+            $self->{logger}->warning(shift->full_name() . ': there are too many jobs running (maximum of ' . $self->{maximum_simultaneous_jobs} . ').');
         };
 
         $self->{on_callbacks}->{on_singleton_already_running} = sub {
-            $self->{logger}->info('job ' . shift->full_name() . ' is already running.');
+            $self->{logger}->info(shift->full_name() . ': already running.');
         };
     }
 
