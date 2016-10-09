@@ -23,7 +23,7 @@ sub random_delay {
     my ($class, $interval) = @_;
 
     substr rand(
-        isint($interval) == 1 ? $interval : 0
+        isint($interval) > 0 ? $interval : 0
     ), 0, 3;
 }
 

@@ -25,8 +25,8 @@ sub new {
     $options{maximum} //= 0;
     $options{maximum_simultaneous_jobs} //= 0;
     
-    croak('maximum must be a positive integer') unless isint($options{maximum}) && $options{maximum} >= 0;
-    croak('maximum_simultaneous_jobs must be a positive integer') unless isint($options{maximum_simultaneous_jobs}) && $options{maximum_simultaneous_jobs} >= 0;
+    croak('maximum must be a positive integer') unless isint($options{maximum}) > 0;
+    croak('maximum_simultaneous_jobs must be a positive integer') unless isint($options{maximum_simultaneous_jobs}) > 0;
 
     my $self = {
         logger => blessed($options{logger}) && $options{logger}->isa('Navel::Logger') ? $options{logger} : undef,
