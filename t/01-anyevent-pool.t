@@ -22,12 +22,12 @@ BEGIN {
 my $count = 0;
 my $after = 2;
 
-my $done = AnyEvent->condvar();
+my $done = AnyEvent->condvar;
 
 my $pool;
 
 lives_ok {
-    $pool = Navel::AnyEvent::Pool->new();
+    $pool = Navel::AnyEvent::Pool->new;
 } 'create pool';
 
 lives_ok {
@@ -46,12 +46,12 @@ lives_ok {
         name => 'end',
         after => $after,
         callback => sub {
-            $done->send();
+            $done->send;
         }
     );
 } 'attach timers';
 
-$done->recv();
+$done->recv;
 
 ok($count == $after, 'events properly planned');
 

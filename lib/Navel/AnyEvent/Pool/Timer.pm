@@ -49,7 +49,7 @@ sub new {
     if (ref $class) {
         $self = $class;
 
-        $self->detach_pool() if blessed($temp{pool}) && $temp{pool}->isa('Navel::AnyEvent::Pool');
+        $self->detach_pool if blessed($temp{pool}) && $temp{pool}->isa('Navel::AnyEvent::Pool');
 
         $self->{$_} //= $temp{$_} for keys %temp;
     } else {
@@ -69,7 +69,7 @@ sub new {
         }, $class;
 
         my $wrapped_callback = sub {
-            unless ($self->is_pooled() && $self->{pool}->{maximum_simultaneous_jobs} && @{$self->{pool}->jobs_running()} >= $self->{pool}->{maximum_simultaneous_jobs}) {
+            unless ($self->is_pooled && $self->{pool}->{maximum_simultaneous_jobs} && @{$self->{pool}->jobs_running} >= $self->{pool}->{maximum_simultaneous_jobs}) {
                 $callback->($self);
             } else {
                 $self->{on_maximum_simultaneous_jobs}->($self) if ref $self->{on_maximum_simultaneous_jobs} eq 'CODE';
@@ -118,7 +118,7 @@ sub detach_pool {
 
     my $detached;
 
-    if ($self->is_pooled()) {
+    if ($self->is_pooled) {
         $detached = delete $self->{pool}->{jobs}->{timers}->{$self->{name}};
 
         undef $self->{pool};
@@ -178,7 +178,7 @@ sub disable {
 sub DESTROY {
     my $self = shift;
 
-    $self->detach_pool();
+    $self->detach_pool;
 
     undef $self->{anyevent_timer};
 

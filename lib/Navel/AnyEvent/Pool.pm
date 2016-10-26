@@ -40,15 +40,15 @@ sub new {
 
     if (defined $self->{logger}) {
         $self->{on_callbacks}->{on_disabled} = sub {
-            $self->{logger}->info(shift->full_name() . ': disabled.');
+            $self->{logger}->info(shift->full_name . ': disabled.');
         };
 
         $self->{on_callbacks}->{on_maximum_simultaneous_jobs} = sub {
-            $self->{logger}->warning(shift->full_name() . ': there are too many jobs running (maximum of ' . $self->{maximum_simultaneous_jobs} . ').');
+            $self->{logger}->warning(shift->full_name . ': there are too many jobs running (maximum of ' . $self->{maximum_simultaneous_jobs} . ').');
         };
 
         $self->{on_callbacks}->{on_singleton_already_running} = sub {
-            $self->{logger}->info(shift->full_name() . ': already running.');
+            $self->{logger}->info(shift->full_name . ': already running.');
         };
     }
 
@@ -71,7 +71,7 @@ sub attach_timer {
     croak('a name must be provided to add a timer') unless defined $options{name};
 
     croak('a timer named ' . $options{name} . ' already exists') if exists $self->{jobs}->{timers}->{$options{name}};
-    croak('too many jobs already registered (maximum of ' . $self->{maximum} . ')') if $self->{maximum} && @{$self->jobs()} >= $self->{maximum};
+    croak('too many jobs already registered (maximum of ' . $self->{maximum} . ')') if $self->{maximum} && @{$self->jobs} >= $self->{maximum};
 
     $self->{jobs}->{timers}->{$options{name}} = $package->new(
         %{$self->{on_callbacks}},
@@ -89,7 +89,7 @@ sub detach_timer {
 
     my $timer = $self->{jobs}->{timers}->{$name};
 
-    $timer->detach_pool() if defined $timer;
+    $timer->detach_pool if defined $timer;
 
     $timer;
 }
@@ -98,7 +98,7 @@ sub timers {
     [
         grep {
             $_->isa('Navel::AnyEvent::Pool::Timer')
-        } @{shift->jobs()}
+        } @{shift->jobs}
     ];
 }
 
@@ -114,7 +114,7 @@ sub jobs_running {
     [
         grep {
             $_->{running}
-        } @{shift->jobs()}
+        } @{shift->jobs}
     ];
 }
 
