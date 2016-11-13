@@ -56,7 +56,7 @@ sub new {
         croak('callback must a CODE reference') unless ref $callback eq 'CODE';
 
         $self = bless {
-            name => $name // croak('a name must be provided to add a timer'),
+            name => $name // croak('name must be defined'),
             pool => $temp{pool},
             enabled => $temp{enabled} // 1,
             singleton => $temp{singleton},

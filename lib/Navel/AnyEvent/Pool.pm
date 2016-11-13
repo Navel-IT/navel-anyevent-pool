@@ -68,7 +68,7 @@ sub attach_timer {
         $package = $timer;
     }
 
-    croak('a name must be provided to add a timer') unless defined $options{name};
+    croak('name must be defined') unless defined $options{name};
 
     croak('a timer named ' . $options{name} . ' already exists') if exists $self->{jobs}->{timers}->{$options{name}};
     croak('too many jobs already registered (maximum of ' . $self->{maximum} . ')') if $self->{maximum} && @{$self->jobs} >= $self->{maximum};
@@ -85,7 +85,7 @@ sub attach_timer {
 sub detach_timer {
     my ($self, $name) = @_;
 
-    croak('a name must be provided to detach a timer') unless defined $name;
+    croak('name must be defined') unless defined $name;
 
     my $timer = $self->{jobs}->{timers}->{$name};
 
